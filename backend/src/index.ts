@@ -7,12 +7,46 @@ import userRouter from './routes/user';
 const app = express();
 const PORT = process.env.PORT;
 
-app.use(pinoHttp({ logger }));
 app.use(express.json());
-app.use(userRouter);
+
+app.use((_, res: Response, next) => {
+  const originalJson = res.json.bind(res);
+  res.json = (body) => {
+    (res as any).locals.responseBody = body; // stash it
+    return originalJson(body);
+  };
+  next();
+});
+
+app.use(
+  pinoHttp({
+    logger,
+    serializers: {
+      req(req) {
+        return {
+          id: req.id,
+          method: req.method,
+          url: req.url,
+          query: req.query,
+          params: req.params,
+          body: req.raw.body,
+          headers: req.headers,
+        };
+      },
+      res(res) {
+        return {
+          statusCode: res.statusCode,
+          body: res.raw.locals.responseBody,
+        };
+      },
+    },
+  }),
+);
+
+app.use('/user', userRouter);
 
 /* ------------------- health status ------------------- */
-app.get('/', (_, res: Response) => {
+app.get('/api/health', (_, res: Response) => {
   res.status(200).json({
     msg: 'Healthy',
   });
