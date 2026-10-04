@@ -1,10 +1,13 @@
 import express, { Response } from 'express';
+import { logger } from './lib/logger';
+import pinoHttp from 'pino-http';
 
 import userRouter from './routes/user';
 
 const app = express();
 const PORT = process.env.PORT;
 
+app.use(pinoHttp({ logger }));
 app.use(express.json());
 app.use(userRouter);
 

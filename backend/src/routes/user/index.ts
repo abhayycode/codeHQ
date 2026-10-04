@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { db } from '../../db';
+import { logger } from '../../lib/logger';
 
 const userRouter = express.Router();
 
@@ -7,7 +8,8 @@ userRouter.get('/user/:id', async (req: Request, res: Response) => {
   const userId = Number(req.params.id);
 
   if (Number.isNaN(userId)) {
-    return res.status(400).json({ error: 'Invalid user id' });
+    logger.error(`"Invalid ID: ${userId}`);
+    return res.status(404).json({ error: 'Invalid user id' });
   }
 
   const user = await db.query.usersTable.findFirst({
@@ -17,6 +19,7 @@ userRouter.get('/user/:id', async (req: Request, res: Response) => {
   });
 
   if (!user) {
+    logger.error({}, `User not found for ID: ${userId}`);
     return res.status(404).json({ error: 'User not found' });
   }
 
