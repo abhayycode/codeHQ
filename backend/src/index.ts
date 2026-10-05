@@ -3,6 +3,7 @@ import { logger } from './lib/logger';
 import pinoHttp from 'pino-http';
 
 import userRouter from './routes/user';
+import platformRouter from './routes/platform';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -43,7 +44,9 @@ app.use(
   }),
 );
 
+/* ------------------- routes ------------------- */
 app.use('/user', userRouter);
+app.use('/platform', platformRouter);
 
 /* ------------------- health status ------------------- */
 app.get('/api/health', (_, res: Response) => {
