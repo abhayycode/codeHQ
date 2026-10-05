@@ -29,7 +29,7 @@ router.post('/update', async (req: Request, res: Response) => {
       .update(platformsTable)
       .set({
         platformName,
-        userName: plt_username,
+        plt_username,
       })
       .where(eq(platformsTable.id, existing.id))
       .returning();
@@ -39,7 +39,7 @@ router.post('/update', async (req: Request, res: Response) => {
       .values({
         user_id: 1,
         platformName,
-        userName: plt_username,
+        plt_username,
       })
       .returning();
   }

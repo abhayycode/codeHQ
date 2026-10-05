@@ -13,7 +13,7 @@ export const platformsTable = pgTable('platforms', {
     .notNull()
     .references(() => usersTable.id),
   platformName: varchar({ length: 200 }).notNull().unique(),
-  userName: varchar({ length: 250 }).notNull(),
+  plt_username: varchar({ length: 250 }).notNull(),
   last_synced: date().defaultNow(),
 });
 

@@ -1,0 +1,1 @@
+ALTER TABLE "platforms" RENAME COLUMN "userName" TO "plt_username";
