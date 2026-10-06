@@ -1,7 +1,10 @@
 import express, { Request, Response } from 'express';
+
 import { db } from '../../db';
 import { usersTable } from '../../db/schema';
+
 import { logger } from '../../lib/logger';
+
 
 const userRouter = express.Router();
 

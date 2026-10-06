@@ -1,7 +1,10 @@
 import express, { Request, Response } from 'express';
 import { eq } from 'drizzle-orm';
+
 import { db } from '../../db';
 import { platformsTable } from '../../db/schema';
+
+import PlatformSyncProcessor from '../../services/PlatformSyncProcessor';
 
 const router = express.Router();
 
@@ -43,6 +46,8 @@ router.post('/update', async (req: Request, res: Response) => {
       })
       .returning();
   }
+
+  await PlatformSyncProcessor.process(platform.id, plt_username);
 
   return res.status(200).json({ data: platform });
 });

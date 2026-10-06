@@ -1,4 +1,4 @@
-import { date, integer, pgTable, varchar } from 'drizzle-orm/pg-core';
+import { date, integer, pgTable, unique, varchar } from 'drizzle-orm/pg-core';
 
 export const usersTable = pgTable('users', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -29,11 +29,15 @@ export const platform_snapshot = pgTable('platforn_snapshot', {
   date: date().defaultNow(),
 });
 
-export const submission_activity = pgTable('submission_activity', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  platform_id: integer()
-    .notNull()
-    .references(() => platformsTable.id),
-  count: integer().default(0),
-  date: date().defaultNow(),
-});
+export const submission_activity = pgTable(
+  'submission_activity',
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    platform_id: integer()
+      .notNull()
+      .references(() => platformsTable.id),
+    count: integer().default(0),
+    date: date().defaultNow(),
+  },
+  (table) => [unique().on(table.platform_id, table.date)],
+);
